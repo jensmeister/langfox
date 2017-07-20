@@ -17,6 +17,7 @@ import java.util.ArrayList;
  */
 
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
+
     private ArrayList<Language> language;
     private Context context;
 
@@ -34,8 +35,8 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(DataAdapter.ViewHolder viewHolder, int i) {
 
-        viewHolder.tv_android.setText(language.get(i).getName());
-        Picasso.with(context).load(language.get(i).getImageURL()).resize(120, 120).into(viewHolder.img_android);
+        viewHolder.tv_language.setText(language.get(i).getName());
+        Picasso.with(context).load(language.get(i).getImageURL()).resize(100, 100).into(viewHolder.img_language);
     }
 
     @Override
@@ -44,13 +45,14 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        private TextView tv_android;
-        private ImageView img_android;
+        private TextView tv_language;
+        private ImageView img_language;
+
         public ViewHolder(View view) {
             super(view);
 
-            tv_android = (TextView)view.findViewById(R.id.info_text);
-            img_android = (ImageView) view.findViewById(R.id.info_image);
+            tv_language = (TextView)view.findViewById(R.id.info_text);
+            img_language = (ImageView) view.findViewById(R.id.info_image);
         }
     }
 

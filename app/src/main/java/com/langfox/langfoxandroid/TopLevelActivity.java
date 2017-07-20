@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-
 import java.util.ArrayList;
 
 
@@ -28,11 +27,11 @@ public class TopLevelActivity extends AppCompatActivity {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.card_recycler_view);
         recyclerView.setHasFixedSize(true);
 
-        GridLayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 2);
+        GridLayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 3);
         recyclerView.setLayoutManager(layoutManager);
 
-        ArrayList<Language> languages = prepareData();
-        DataAdapter adapter = new DataAdapter(getApplicationContext(), languages);
+        ArrayList<Language> language = prepareData();
+        DataAdapter adapter = new DataAdapter(getApplicationContext(), language);
         recyclerView.setAdapter(adapter);
 
     }
