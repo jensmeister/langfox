@@ -14,13 +14,15 @@
         <activity
             android:name=".TopLevelActivity"
             android:configChanges="orientation|keyboardHidden|screenSize">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".WorkbookActivityCat" />
+        <activity android:name=".WorkbookActivityPath" />
+        <activity android:name=".WorkbookActivityNewLan"></activity>
     </application>
 
 </manifest>
