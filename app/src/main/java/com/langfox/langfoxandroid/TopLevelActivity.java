@@ -27,6 +27,7 @@ import java.util.ArrayList;
 
 public class TopLevelActivity extends AppCompatActivity implements View.OnClickListener {
 
+    DataBaseHelper myDB;
     //create the fragment to display word-remembering battles
     private BattleFragment battleFragment;
 
@@ -91,6 +92,9 @@ public class TopLevelActivity extends AppCompatActivity implements View.OnClickL
         fragmentManager = getSupportFragmentManager();
         // select the second tab when it is firstly created
         setTabSelection(1);
+
+        // call constructor of DATABASE Helper class
+        myDB = new DataBaseHelper(this);
     }
 
     /**
