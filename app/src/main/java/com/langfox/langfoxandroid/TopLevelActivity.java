@@ -15,19 +15,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 
 public class TopLevelActivity extends AppCompatActivity implements View.OnClickListener {
 
-    DataBaseHelper myDB;
     //create the fragment to display word-remembering battles
     private BattleFragment battleFragment;
 
@@ -94,7 +89,6 @@ public class TopLevelActivity extends AppCompatActivity implements View.OnClickL
         setTabSelection(1);
 
         // call constructor of DATABASE Helper class
-        myDB = new DataBaseHelper(this);
     }
 
     /**
