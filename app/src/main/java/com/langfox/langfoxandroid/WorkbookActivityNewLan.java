@@ -19,12 +19,16 @@ import android.widget.Toast;
 import com.langfox.langfoxandroid.LangfoxContract.LanguageEntry;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import static android.R.id.list;
 
 public class WorkbookActivityNewLan extends AppCompatActivity {
 
 
     private DataBaseHelper mDbHelper;
 
+    private SQLiteTestActivity sqliteTestActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +80,9 @@ public class WorkbookActivityNewLan extends AppCompatActivity {
         for (int i = 0; i < language_names.length; i++) {
             Language language = new Language();
             language.setName(language_names[i]);
+//            language.setImageURL(language_image_urls.get(i));
             language.setImageURL(language_image_urls[i]);
+
             language_array.add(language);
         }
         return language_array;
@@ -94,15 +100,19 @@ public class WorkbookActivityNewLan extends AppCompatActivity {
 
     };
 
-    private final String language_image_urls[] = {
-            "https://s3-eu-west-1.amazonaws.com/jwfirstbucket/img/flags/de.svg",
-            "https://s3-eu-west-1.amazonaws.com/jwfirstbucket/img/flags/zh.svg",
-            "https://s3-eu-west-1.amazonaws.com/jwfirstbucket/img/flags/ja.svg",
-            "https://s3-eu-west-1.amazonaws.com/jwfirstbucket/img/flags/fi.svg",
-            "https://s3-eu-west-1.amazonaws.com/jwfirstbucket/img/flags/en.svg",
-            "https://s3-eu-west-1.amazonaws.com/jwfirstbucket/img/flags/es.svg",
-            "https://s3-eu-west-1.amazonaws.com/jwfirstbucket/img/flags/sv.svg"
-    };
+//    private final String language_image_urls[] = {
+//            "https://s3-eu-west-1.amazonaws.com/jwfirstbucket/img/flags/de.svg",
+//            "https://s3-eu-west-1.amazonaws.com/jwfirstbucket/img/flags/zh.svg",
+//            "https://s3-eu-west-1.amazonaws.com/jwfirstbucket/img/flags/ja.svg",
+//            "https://s3-eu-west-1.amazonaws.com/jwfirstbucket/img/flags/fi.svg",
+//            "https://s3-eu-west-1.amazonaws.com/jwfirstbucket/img/flags/en.svg",
+//            "https://s3-eu-west-1.amazonaws.com/jwfirstbucket/img/flags/es.svg",
+//            "https://s3-eu-west-1.amazonaws.com/jwfirstbucket/img/flags/sv.svg"
+//    };
+
+    private final List<String> language_image_urls_list = sqliteTestActivity.getFlagUrls();
+
+    String[] language_image_urls = language_image_urls_list.toArray(new String[0]);
 
     private void displayDatabaseInfo() {
         // To access our database, we instantiate our subclass of SQLiteOpenHelper
