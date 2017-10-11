@@ -15,11 +15,11 @@ public class SQLiteTestActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        List<String> flagsIso1 = gettFlagUrls();
+        List<String> flagsIso1 = getFlagUrls();
         setContentView(R.layout.activity_sqlite_test);
     }
 
-    private List<String> gettFlagUrls() {
+    private List<String> getFlagUrls() {
         Log.w("langfoxApp", "testSql 1");
         DataBaseHelper myDB = new DataBaseHelper(this);//getApplicationContext()
         Log.w("langfoxApp", "testSql 2");
