@@ -15,11 +15,11 @@ public class SQLiteTestActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        testSql();
+        List<String> flagsIso1 = gettFlagUrls();
         setContentView(R.layout.activity_sqlite_test);
     }
 
-    private void testSql() {
+    private List<String> gettFlagUrls() {
         Log.w("langfoxApp", "testSql 1");
         DataBaseHelper myDB = new DataBaseHelper(this);//getApplicationContext()
         Log.w("langfoxApp", "testSql 2");
@@ -43,12 +43,15 @@ public class SQLiteTestActivity extends Activity {
         int index = 0;
         cursor.moveToFirst();
         //while (cursor.isAfterLast() == false) {
+        List<String> flagUrls = new ArrayList<>();
         while (!cursor.isAfterLast()) {
             //languageNameArray[i] = cursor.getString(0);
             //Log.w("langfoxApp", "testSql 4.5, index: " + index);
             Log.w("langfoxApp", "testSql 4.7, index: " + cursor.toString());
             Log.w("langfoxApp", "testSql 4.7, index: " + cursor.getInt(0) + " / " + cursor.getString(1) + " / " + cursor.getString(2) + " / " + cursor.getString(3));
-            Log.w("langfoxApp", "https://s3-eu-west-1.amazonaws.com/jwfirstbucket/img/flags/" + cursor.getString(3) + ".svg");
+            Log.w("langfoxApp", "https://s3-eu-west-1.amazonaws.com/jwfirstbucket/img/flagUrls/" + cursor.getString(3) + ".svg");
+            String flagUrl = "https://s3-eu-west-1.amazonaws.com/jwfirstbucket/img/flagUrls/" + cursor.getString(3) + ".svg";
+            flagUrls.add(flagUrl);
             //strings.add(cursor.getString(0));
             strings.add("cat is dog");
             //Log.w("langfoxApp", "testSql 5: " + cursor.getString(0));
@@ -57,6 +60,7 @@ public class SQLiteTestActivity extends Activity {
         }
         cursor.close();
         dbTest.close();
+        return flagUrls;
 
     }
 }
