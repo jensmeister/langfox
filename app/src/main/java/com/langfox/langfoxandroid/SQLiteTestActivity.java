@@ -18,6 +18,13 @@ public class SQLiteTestActivity extends Activity {
         List<String> flagsIso1 = getFlagUrls();
         setContentView(R.layout.activity_sqlite_test);
     }
+    
+    private String[] getFlagUrlsArray() {
+        List<String> flagUrls = this.getFlagUrls();
+        String[] flagUrlsArray = new String[flagUrls.size()];
+        flagUrlsArray = flagUrls.toArray(flagUrlsArray);
+        return flagUrlsArray;
+    }
 
     private List<String> getFlagUrls() {
         Log.w("langfoxApp", "testSql 1");
@@ -60,6 +67,11 @@ public class SQLiteTestActivity extends Activity {
         }
         cursor.close();
         dbTest.close();
+
+        for (String flagUrl : flagUrls) {
+
+        }
+
         return flagUrls;
 
     }
