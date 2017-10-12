@@ -1,4 +1,4 @@
-package com.langfox.langfoxandroid;
+package com.langfox.langfoxandroid.data;
 
 import android.content.Context;
 import android.graphics.drawable.PictureDrawable;
@@ -11,26 +11,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.load.model.StreamEncoder;
-import com.squareup.picasso.Picasso;
+import com.langfox.langfoxandroid.Language;
+import com.langfox.langfoxandroid.R;
+import com.langfox.langfoxandroid.SvgDecoder;
+import com.langfox.langfoxandroid.SvgDrawableTranscoder;
+import com.langfox.langfoxandroid.SvgSoftwareLayerSetter;
 import com.bumptech.glide.Glide;
-import android.app.Activity;
-import android.content.ContentResolver;
-import android.graphics.drawable.PictureDrawable;
-import android.net.Uri;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.GenericRequestBuilder;
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.model.StreamEncoder;
 import com.bumptech.glide.load.resource.file.FileToStreamDecoder;
 import com.caverock.androidsvg.SVG;
 
-import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 

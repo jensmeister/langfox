@@ -1,4 +1,4 @@
-package com.langfox.langfoxandroid;
+package com.langfox.langfoxandroid.data;
 
 import android.provider.BaseColumns;
 
@@ -13,7 +13,7 @@ public final class LangfoxContract {
     public static final class LanguageEntry implements BaseColumns{
 
         public final static String TABLE_NAME = "language";
-        public final static String language_id = BaseColumns._ID;
+        public final static String COLUMN_LANGUAGE_ID = "language_id";
         public final static String COLUMN_LANGUAGE_NAME = "name";
         public final static String COLUMN_LANGUAGE_NATIVE_NAME = "native_name";
         public final static String COLUMN_LANGUAGE_LANGUAGE_ISO1 = "language_iso1";
