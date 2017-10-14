@@ -86,15 +86,14 @@ public class TopLevelActivity extends AppCompatActivity implements View.OnClickL
         initViews();
         fragmentManager = getSupportFragmentManager();
         // select the second tab when it is firstly created
-        setTabSelection(1);
-
-        // call constructor of DATABASE Helper class
+        setTabSelection(0);
     }
 
     /**
      * obtain instance of each widget，set OnClick event
      */
     private void initViews() {
+
         battleLayout = findViewById(R.id.battle_layout);
         workbookLayout = findViewById(R.id.wordbook_layout);
         findingLayout = findViewById(R.id.finding_layout);

@@ -23,6 +23,10 @@
         <activity android:name=".WorkbookActivityCat" />
         <activity android:name=".WorkbookActivityPath" />
         <activity android:name=".WorkbookActivityNewLan"></activity>
+        <activity android:name=".LoginActivity"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".SignupActivity"
+            android:windowSoftInputMode="adjustPan"/>
     </application>
 
 </manifest>
