@@ -9,11 +9,15 @@
         android:layout_centerInParent="true"
         android:orientation="vertical" >
 
-        <ImageView
-            android:layout_width="wrap_content"
+        <!-- Setting Button -->
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/setting"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/me" />
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
+            android:padding="12dp"
+            android:text="Setting"/>
 
         <TextView
             android:layout_width="wrap_content"
