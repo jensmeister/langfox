@@ -123,7 +123,7 @@ public class WordbookFragment extends Fragment implements AdapterView.OnItemClic
                     Log.d("modified:", contributorsList.getModified());
                     Log.d("name:", contributorsList.getName());
                     Log.d("object_base_64_encoded:", contributorsList.getObject_base_64_encoded());
-                    
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
