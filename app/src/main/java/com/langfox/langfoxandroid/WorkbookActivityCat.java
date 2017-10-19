@@ -8,9 +8,9 @@ package com.langfox.langfoxandroid;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import butterknife.OnClick;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-
 import java.util.ArrayList;
 
 public class WorkbookActivityCat extends AppCompatActivity {

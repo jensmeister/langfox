@@ -5,6 +5,7 @@ package com.langfox.langfoxandroid;
 
 
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -18,6 +19,16 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import java.io.IOException;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import com.google.gson.Gson;
+import com.langfox.langfoxandroid.pojo.Category_Proxies;
 
 
 public class WordbookFragment extends Fragment implements AdapterView.OnItemClickListener {
@@ -77,6 +88,7 @@ public class WordbookFragment extends Fragment implements AdapterView.OnItemClic
             intent = new Intent(getActivity(), WorkbookActivityPath.class);
         } else if (position == 2) {
             intent = new Intent(getActivity(), WorkbookActivityCat.class);
+            getCategory_Proxies();
 
         }
         startActivity(intent);
@@ -88,4 +100,40 @@ public class WordbookFragment extends Fragment implements AdapterView.OnItemClic
     public WordbookFragment() {
         // Required empty public constructor
     }
+
+
+    private void getCategory_Proxies() {
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://www.langfox.com/")
+
+                .build();
+
+        LangfoxAPI repo = retrofit.create(LangfoxAPI.class);
+
+        Call<ResponseBody> call = repo.CategoryProxiesBySimpleGetCall();
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+
+                    Gson gson = new Gson();
+                    Category_Proxies contributorsList = gson.fromJson(response.body().string(), Category_Proxies.class);
+                    Log.d("modified:", contributorsList.getModified());
+                    Log.d("name:", contributorsList.getName());
+                    Log.d("object_base_64_encoded:", contributorsList.getObject_base_64_encoded());
+                    
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+    }
+
 }
