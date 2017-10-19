@@ -5,6 +5,7 @@ package com.langfox.langfoxandroid;
 
 
 import android.content.Intent;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.io.IOException;
+import java.util.Iterator;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -96,7 +98,6 @@ public class WordbookFragment extends Fragment implements AdapterView.OnItemClic
 
     }
 
-//lalalalala
     public WordbookFragment() {
         // Required empty public constructor
     }
@@ -123,10 +124,31 @@ public class WordbookFragment extends Fragment implements AdapterView.OnItemClic
                     Log.d("modified:", contributorsList.getModified());
                     Log.d("name:", contributorsList.getName());
                     Log.d("object_base_64_encoded:", contributorsList.getObject_base_64_encoded());
+//lalaal
+//                    String base64EncodedData = contributorsList.getObject_base_64_encoded();
+//                    byte[] serializedData = Base64.decode(base64EncodedData, Base64.DEFAULT);
+//                    String sha512Hash = new Sha512Hash(serializedData).toString();
+//                    Log.d("langfoxApp", "Data byteCount: " + serializedData.length + ", sha512Hash: " + sha512Hash);
+//                    HashMap<String, List<CategoryProxy>> map = Deserializer.deSerializeHashMapWithCategoryProxies(serializedData);
+//                    List<CategoryProxy> categoryProxies = map.get("ende");
+//                    if (categoryProxies == null || categoryProxies.isEmpty()) {
+//                        Log.d("langfoxApp", "categoryProxies is empty");
+//                    } else {
+//                        Log.d("langfoxApp", "categoryProxies size: " + categoryProxies.size());
+//                        Iterator iterator = categoryProxies.iterator();
+//                        while (iterator.hasNext()) {
+//                            CategoryProxy categoryProxy = (CategoryProxy) iterator.next();
+//                            String message = categoryProxy.getCategoryTitle() + ", " + categoryProxy.getExerciseCount();
+//                            Log.d("langfoxApp", message);
+//                        }
+//                    }
+
 
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
+
             }
 
             @Override
