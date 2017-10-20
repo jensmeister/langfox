@@ -18,6 +18,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+    }
 }
 
 dependencies {
@@ -43,6 +47,8 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.squareup.retrofit2:converter-gson:2.0.1'
     compile 'com.google.code.gson:gson:2.8.2'
+    compile group: 'org.apache.shiro', name: 'shiro-core', version: '1.4.0'
+    compile files('libs/langfox-cache-0.0.1.jar')
 
     testCompile 'junit:junit:4.12'
 }

@@ -4,16 +4,12 @@ package com.langfox.langfoxandroid;
 //http://blog.csdn.net/guolin_blog/article/details/8744943
 
 
-import android.content.Intent;
-import android.util.Base64;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-
 import android.content.Context;
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,16 +17,23 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.google.gson.Gson;
+import com.langfox.cache.CategoryProxy;
+import com.langfox.cache.Deserializer;
+import com.langfox.langfoxandroid.pojo.Category_Proxies;
+
+import org.apache.shiro.crypto.hash.Sha512Hash;
+
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import com.google.gson.Gson;
-import com.langfox.langfoxandroid.pojo.Category_Proxies;
 
 
 public class WordbookFragment extends Fragment implements AdapterView.OnItemClickListener {
@@ -123,26 +126,25 @@ public class WordbookFragment extends Fragment implements AdapterView.OnItemClic
                     Category_Proxies contributorsList = gson.fromJson(response.body().string(), Category_Proxies.class);
                     Log.d("modified:", contributorsList.getModified());
                     Log.d("name:", contributorsList.getName());
-                    Log.d("object_base_64_encoded:", contributorsList.getObject_base_64_encoded());
-//lalaal
-//                    String base64EncodedData = contributorsList.getObject_base_64_encoded();
-//                    byte[] serializedData = Base64.decode(base64EncodedData, Base64.DEFAULT);
-//                    String sha512Hash = new Sha512Hash(serializedData).toString();
-//                    Log.d("langfoxApp", "Data byteCount: " + serializedData.length + ", sha512Hash: " + sha512Hash);
-//                    HashMap<String, List<CategoryProxy>> map = Deserializer.deSerializeHashMapWithCategoryProxies(serializedData);
-//                    List<CategoryProxy> categoryProxies = map.get("ende");
-//                    if (categoryProxies == null || categoryProxies.isEmpty()) {
-//                        Log.d("langfoxApp", "categoryProxies is empty");
-//                    } else {
-//                        Log.d("langfoxApp", "categoryProxies size: " + categoryProxies.size());
-//                        Iterator iterator = categoryProxies.iterator();
-//                        while (iterator.hasNext()) {
-//                            CategoryProxy categoryProxy = (CategoryProxy) iterator.next();
-//                            String message = categoryProxy.getCategoryTitle() + ", " + categoryProxy.getExerciseCount();
-//                            Log.d("langfoxApp", message);
-//                        }
-//                    }
-
+                    String base64EncodedData = contributorsList.getObject_base_64_encoded();
+                    //Log.d("object_base_64_encoded:", base64EncodedData);
+                    byte[] serializedData = Base64.decode(base64EncodedData, Base64.DEFAULT);
+                    String sha512Hash = new Sha512Hash(serializedData).toString();
+                    Log.d("langfoxApp", "Data byteCount: " + serializedData.length + ", sha512Hash: " + sha512Hash);
+                    HashMap<String, List<CategoryProxy>> map = Deserializer.deSerializeHashMapWithCategoryProxies(serializedData);
+                    List<CategoryProxy> categoryProxies = map.get("ende"); //ui language iso6391 + new language iso 6391
+                    if (categoryProxies == null || categoryProxies.isEmpty()) {
+                        Log.d("langfoxApp", "categoryProxies is empty");
+                    } else {
+                        Log.d("langfoxApp", "categoryProxies size: " + categoryProxies.size());
+                        Iterator iterator = categoryProxies.iterator();
+                        while (iterator.hasNext()) {
+                            CategoryProxy categoryProxy = (CategoryProxy) iterator.next();
+                            //+ FoxSettings.getImageRoot()
+                            String message = categoryProxy.getCategoryTitle() + ", " + categoryProxy.getExerciseCount() + ", " + categoryProxy.geCategoryIcon();
+                            Log.d("langfoxApp", message);
+                        }
+                    }
 
                 } catch (IOException e) {
                     e.printStackTrace();
