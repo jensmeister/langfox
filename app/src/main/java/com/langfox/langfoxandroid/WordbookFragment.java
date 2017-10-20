@@ -20,6 +20,7 @@ import android.widget.ListView;
 import com.google.gson.Gson;
 import com.langfox.cache.CategoryProxy;
 import com.langfox.cache.Deserializer;
+import com.langfox.cache.ExerciseProxy;
 import com.langfox.langfoxandroid.pojo.Category_Proxies;
 
 import org.apache.shiro.crypto.hash.Sha512Hash;
@@ -93,7 +94,7 @@ public class WordbookFragment extends Fragment implements AdapterView.OnItemClic
             intent = new Intent(getActivity(), WorkbookActivityPath.class);
         } else if (position == 2) {
             intent = new Intent(getActivity(), WorkbookActivityCat.class);
-            getCategory_Proxies();
+            getCategoryProxies(4); //4 (exercise view), 5 (path view), 6 (category view) are the relevant values
 
         }
         startActivity(intent);
@@ -106,51 +107,28 @@ public class WordbookFragment extends Fragment implements AdapterView.OnItemClic
     }
 
 
-    private void getCategory_Proxies() {
+    private void getCategoryProxies(final Integer id) {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://www.langfox.com/")
-
                 .build();
-
         LangfoxAPI repo = retrofit.create(LangfoxAPI.class);
-
-        Call<ResponseBody> call = repo.CategoryProxiesBySimpleGetCall();
+        Call<ResponseBody> call = repo.CategoryProxiesBySimpleGetCall(id.toString());
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try {
-
-                    Gson gson = new Gson();
-                    Category_Proxies contributorsList = gson.fromJson(response.body().string(), Category_Proxies.class);
-                    Log.d("modified:", contributorsList.getModified());
-                    Log.d("name:", contributorsList.getName());
-                    String base64EncodedData = contributorsList.getObject_base_64_encoded();
-                    //Log.d("object_base_64_encoded:", base64EncodedData);
-                    byte[] serializedData = Base64.decode(base64EncodedData, Base64.DEFAULT);
-                    String sha512Hash = new Sha512Hash(serializedData).toString();
-                    Log.d("langfoxApp", "Data byteCount: " + serializedData.length + ", sha512Hash: " + sha512Hash);
-                    HashMap<String, List<CategoryProxy>> map = Deserializer.deSerializeHashMapWithCategoryProxies(serializedData);
-                    List<CategoryProxy> categoryProxies = map.get("ende"); //ui language iso6391 + new language iso 6391
-                    if (categoryProxies == null || categoryProxies.isEmpty()) {
-                        Log.d("langfoxApp", "categoryProxies is empty");
-                    } else {
-                        Log.d("langfoxApp", "categoryProxies size: " + categoryProxies.size());
-                        Iterator iterator = categoryProxies.iterator();
-                        while (iterator.hasNext()) {
-                            CategoryProxy categoryProxy = (CategoryProxy) iterator.next();
-                            //+ FoxSettings.getImageRoot()
-                            String message = categoryProxy.getCategoryTitle() + ", " + categoryProxy.getExerciseCount() + ", " + categoryProxy.geCategoryIcon();
-                            Log.d("langfoxApp", message);
-                        }
+                    byte[] serializedData = getBytes(response);
+                    if (id.equals(6)) {
+                        HashMap<String, List<CategoryProxy>> map = Deserializer.deSerializeHashMapWithCategoryProxies(serializedData);
+                        printOutCategoryProxies(map, "ende"); //ui language iso 639-1 + new language iso 639-1
+                    } else if (id.equals(5)) {
+                        HashMap<String, List<ExerciseProxy>> map = Deserializer.deSerializeHashMapWithExerciseProxies(serializedData);
+                        printOutExerciseProxies(map, "ende"); //ui language iso 639-1 + new language iso 639-1
+                    } else if (id.equals(4)) {
+                        HashMap<String, List<ExerciseProxy>> map = Deserializer.deSerializeHashMapWithExerciseProxies(serializedData);
+                        printOutExerciseProxies(map, "endec24"); //ui language iso 639-1 + new language iso 639-1 ... c+categoryId or e+exerciseId
                     }
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-
             }
 
             @Override
@@ -158,6 +136,55 @@ public class WordbookFragment extends Fragment implements AdapterView.OnItemClic
 
             }
         });
+    }
+
+    private byte[] getBytes(Response<ResponseBody> response) {
+        try {
+            Gson gson = new Gson();
+            Category_Proxies contributorsList = gson.fromJson(response.body().string(), Category_Proxies.class);
+            Log.d("modified:", contributorsList.getModified());
+            Log.d("name:", contributorsList.getName());
+            String base64EncodedData = contributorsList.getObject_base_64_encoded();
+            byte[] serializedData = Base64.decode(base64EncodedData, Base64.DEFAULT);
+            String sha512Hash = new Sha512Hash(serializedData).toString();
+            Log.d("langfoxApp", "Data byteCount: " + serializedData.length + ", sha512Hash: " + sha512Hash);
+            return serializedData;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private void printOutCategoryProxies(HashMap<String, List<CategoryProxy>> map, String key) {
+        List<CategoryProxy> categoryProxies = map.get(key); //ui language iso6391 + new language iso 6391
+        if (categoryProxies == null || categoryProxies.isEmpty()) {
+            Log.d("langfoxApp", "categoryProxies is empty");
+        } else {
+            Log.d("langfoxApp", "categoryProxies size: " + categoryProxies.size());
+            Iterator iterator = categoryProxies.iterator();
+            while (iterator.hasNext()) {
+                CategoryProxy categoryProxy = (CategoryProxy) iterator.next();
+                String imageRoot = "https://s3-eu-west-1.amazonaws.com/jwfirstbucket/img/catex/";
+                String message = categoryProxy.getCategoryTitle() + ", " + categoryProxy.getExerciseCount() + ", " + imageRoot + categoryProxy.geCategoryIcon();
+                Log.d("langfoxApp", message);
+            }
+        }
+    }
+
+    private void printOutExerciseProxies(HashMap<String, List<ExerciseProxy>> map, String key) {
+        List<ExerciseProxy> exerciseProxies = map.get(key); //ui language iso6391 + new language iso 6391
+        if (exerciseProxies == null || exerciseProxies.isEmpty()) {
+            Log.d("langfoxApp", "exerciseProxies is empty");
+        } else {
+            Log.d("langfoxApp", "exerciseProxies size: " + exerciseProxies.size());
+            Iterator iterator = exerciseProxies.iterator();
+            while (iterator.hasNext()) {
+                ExerciseProxy exerciseProxy = (ExerciseProxy) iterator.next();
+                String imageRoot = "https://s3-eu-west-1.amazonaws.com/jwfirstbucket/img/catex/";
+                String message = exerciseProxy.getTitleTranslated() + ", " + exerciseProxy.getQuestionCount() + ", " + imageRoot + exerciseProxy.getImageFileName();
+                Log.d("langfoxApp", message);
+            }
+        }
     }
 
 }
