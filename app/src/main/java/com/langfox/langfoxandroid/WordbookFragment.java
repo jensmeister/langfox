@@ -94,7 +94,7 @@ public class WordbookFragment extends Fragment implements AdapterView.OnItemClic
             intent = new Intent(getActivity(), WorkbookActivityPath.class);
         } else if (position == 2) {
             intent = new Intent(getActivity(), WorkbookActivityCat.class);
-            getCategoryProxies(4); //4 (exercise view), 5 (path view), 6 (category view) are the relevant values
+            getProxies(4); //4 (exercise view), 5 (path view), 6 (category view) are the relevant values
 
         }
         startActivity(intent);
@@ -107,7 +107,7 @@ public class WordbookFragment extends Fragment implements AdapterView.OnItemClic
     }
 
 
-    private void getCategoryProxies(final Integer id) {
+    private void getProxies(final Integer id) {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://www.langfox.com/")
