@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/LangfoxAndroid.iml" filepath="$PROJECT_DIR$/LangfoxAndroid.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/langfox.iml" filepath="$PROJECT_DIR$/langfox.iml" />
-      <module fileurl="file://$PROJECT_DIR$/langfox-branchPengCheng.iml" filepath="$PROJECT_DIR$/langfox-branchPengCheng.iml" />
     </modules>
   </component>
 </project>

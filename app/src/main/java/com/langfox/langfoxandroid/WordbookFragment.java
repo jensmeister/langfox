@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -38,27 +39,14 @@ import retrofit2.Retrofit;
 
 
 public class WordbookFragment extends Fragment implements AdapterView.OnItemClickListener {
-    /**
-     * there is one ListView in the menu layout
-     */
 
     private ListView menuList;
-
-    /**
-     * create an adapter for the ListView
-     */
-
     private ArrayAdapter<String> adapter;
-
-    /**
-     * data to fill up the ListView
-     */
-
     private String[] menuItems = {"Courses in another language", "Available Courses by Learning Path", "Available Courses by Categories"};
-
-    /**
-     * Initialize the data in adapter when fragment is attached to activity
-     */
+    private HashMap<String, List<CategoryProxy>> categoryProxies;
+    private HashMap<String, List<ExerciseProxy>> pathProxies;
+    private HashMap<String, List<ExerciseProxy>> exerciseProxies;
+    private HashMap<String, String> exIdToWords;
 
     @Override
     public void onAttach(Context context) {
@@ -77,6 +65,7 @@ public class WordbookFragment extends Fragment implements AdapterView.OnItemClic
         View view = inflater.inflate(R.layout.fragment_wordbook, container, false);
         menuList = (ListView) view.findViewById(R.id.menu_list);
         menuList.setAdapter(adapter);
+        this.getExIdToWords();
         menuList.setOnItemClickListener(this);
         return view;
     }
@@ -95,45 +84,101 @@ public class WordbookFragment extends Fragment implements AdapterView.OnItemClic
         } else if (position == 2) {
             intent = new Intent(getActivity(), WorkbookActivityCat.class);
             getProxies(4); //4 (exercise view), 5 (path view), 6 (category view) are the relevant values
-
         }
         startActivity(intent);
-
-
     }
 
     public WordbookFragment() {
         // Required empty public constructor
     }
 
-
     private void getProxies(final Integer id) {
+        if (id.equals(6)) {
+            this.getCategoryProxies();
+        } else if (id.equals(5)) {
+            this.getPathProxies();
+        } else if (id.equals(4)) {
+            this.getExerciseProxies();
+        }
+    }
 
+    private void getCategoryProxies() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://www.langfox.com/")
                 .build();
         LangfoxAPI repo = retrofit.create(LangfoxAPI.class);
-        Call<ResponseBody> call = repo.CategoryProxiesBySimpleGetCall(id.toString());
-
+        Call<ResponseBody> call = repo.CategoryProxiesBySimpleGetCall("6");
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    byte[] serializedData = getBytes(response);
-                    if (id.equals(6)) {
-                        HashMap<String, List<CategoryProxy>> map = Deserializer.deSerializeHashMapWithCategoryProxies(serializedData);
-                        printOutCategoryProxies(map, "ende"); //ui language iso 639-1 + new language iso 639-1
-                    } else if (id.equals(5)) {
-                        HashMap<String, List<ExerciseProxy>> map = Deserializer.deSerializeHashMapWithExerciseProxies(serializedData);
-                        printOutExerciseProxies(map, "ende"); //ui language iso 639-1 + new language iso 639-1
-                    } else if (id.equals(4)) {
-                        HashMap<String, List<ExerciseProxy>> map = Deserializer.deSerializeHashMapWithExerciseProxies(serializedData);
-                        printOutExerciseProxies(map, "endec24"); //ui language iso 639-1 + new language iso 639-1 ... c+categoryId or e+exerciseId
-                    }
+                byte[] serializedData = getBytes(response);
+                categoryProxies = Deserializer.deSerializeHashMapWithCategoryProxies(serializedData);
+                printOutCategoryProxies(categoryProxies, "ende");
             }
-
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                categoryProxies = new HashMap<>();
+            }
+        });
+    }
 
+    private void getPathProxies() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://www.langfox.com/")
+                .build();
+        LangfoxAPI repo = retrofit.create(LangfoxAPI.class);
+        Call<ResponseBody> call = repo.CategoryProxiesBySimpleGetCall("5");
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                byte[] serializedData = getBytes(response);
+                pathProxies = Deserializer.deSerializeHashMapWithExerciseProxies(serializedData);
+                printOutExerciseProxies(pathProxies, "en", "de");
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                pathProxies = new HashMap<>();
+            }
+        });
+    }
+
+    private void getExerciseProxies() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://www.langfox.com/")
+                .build();
+        LangfoxAPI repo = retrofit.create(LangfoxAPI.class);
+        Call<ResponseBody> call = repo.CategoryProxiesBySimpleGetCall("4");
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                byte[] serializedData = getBytes(response);
+                exerciseProxies = Deserializer.deSerializeHashMapWithExerciseProxies(serializedData);
+                printOutExerciseProxies(exerciseProxies, "en", "dec24"); //ui language iso 639-1 + new language iso 639-1 ... c+categoryId or e+exerciseId
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                exerciseProxies = new HashMap<>();
+            }
+        });
+    }
+
+    private void getExIdToWords() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://www.langfox.com/")
+                .build();
+        LangfoxAPI repo = retrofit.create(LangfoxAPI.class);
+        Call<ResponseBody> call = repo.CategoryProxiesBySimpleGetCall("7");
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                byte[] serializedData = getBytes(response);
+                exIdToWords = Deserializer.deSerializeHashMapWithString(serializedData);
+                Log.d("langfoxApp", "setExIdToWords finished");
+                //printOutExIdToWords(exIdToWords);
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                exIdToWords = new HashMap<>();
             }
         });
     }
@@ -171,7 +216,8 @@ public class WordbookFragment extends Fragment implements AdapterView.OnItemClic
         }
     }
 
-    private void printOutExerciseProxies(HashMap<String, List<ExerciseProxy>> map, String key) {
+    private void printOutExerciseProxies(HashMap<String, List<ExerciseProxy>> map, String uiLanguageIso6391, String newLanguageIso6391) {
+        String key = uiLanguageIso6391 + newLanguageIso6391;
         List<ExerciseProxy> exerciseProxies = map.get(key); //ui language iso6391 + new language iso 6391
         if (exerciseProxies == null || exerciseProxies.isEmpty()) {
             Log.d("langfoxApp", "exerciseProxies is empty");
@@ -181,9 +227,19 @@ public class WordbookFragment extends Fragment implements AdapterView.OnItemClic
             while (iterator.hasNext()) {
                 ExerciseProxy exerciseProxy = (ExerciseProxy) iterator.next();
                 String imageRoot = "https://s3-eu-west-1.amazonaws.com/jwfirstbucket/img/catex/";
-                String message = exerciseProxy.getTitleTranslated() + ", " + exerciseProxy.getQuestionCount() + ", " + imageRoot + exerciseProxy.getImageFileName();
+                String compositeKey = exerciseProxy.getCompositeId(uiLanguageIso6391); //Get the key for getting the strings from the map
+                String message = exerciseProxy.getTitleTranslated()
+                        + ", " + exerciseProxy.getQuestionCount()
+                        + ", " + imageRoot + exerciseProxy.getImageFileName()
+                        + ", " + this.exIdToWords.get(compositeKey);
                 Log.d("langfoxApp", message);
             }
+        }
+    }
+
+    private void printOutExIdToWords(HashMap<String, String> map) {
+        for (Map.Entry mapEntry : map.entrySet()) {
+            Log.d("langfoxApp",  mapEntry.getKey() + ": " + mapEntry.getValue());
         }
     }
 
