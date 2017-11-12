@@ -1,4 +1,4 @@
-package com.langfox.langfoxandroid;
+package com.langfox.langfoxandroid.fragment;
 
 
 import android.content.Intent;
@@ -8,25 +8,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ListView;
+
+import com.langfox.langfoxandroid.R;
+import com.langfox.langfoxandroid.SettingsActivity;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class BattleFragment extends Fragment {
+public class MeFragment extends Fragment {
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_battle, container, false);
-        Button button = (Button) view.findViewById(R.id.login_or_sign_up);
+        View view = inflater.inflate(R.layout.fragment_me, container, false);
+        Button button = (Button) view.findViewById(R.id.setting);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                Intent intent = new Intent(getActivity(), SettingsActivity.class);
                 startActivity(intent);
             }
         });
@@ -34,8 +37,7 @@ public class BattleFragment extends Fragment {
         return view;
     }
 
-
-    public BattleFragment() {
+    public MeFragment() {
         // Required empty public constructor
     }
 

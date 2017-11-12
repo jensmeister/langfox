@@ -20,6 +20,11 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.langfox.langfoxandroid.fragment.BattleFragment;
+import com.langfox.langfoxandroid.fragment.FindingFragment;
+import com.langfox.langfoxandroid.fragment.MeFragment;
+import com.langfox.langfoxandroid.fragment.WordbookFragment;
+
 
 public class TopLevelActivity extends AppCompatActivity implements View.OnClickListener {
 
