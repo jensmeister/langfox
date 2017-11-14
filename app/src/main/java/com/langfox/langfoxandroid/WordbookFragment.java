@@ -29,7 +29,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -65,6 +67,7 @@ public class WordbookFragment extends Fragment implements AdapterView.OnItemClic
         View view = inflater.inflate(R.layout.fragment_wordbook, container, false);
         menuList = (ListView) view.findViewById(R.id.menu_list);
         menuList.setAdapter(adapter);
+        localizationTest();
         this.getExIdToWords();
         menuList.setOnItemClickListener(this);
         return view;
@@ -160,6 +163,16 @@ public class WordbookFragment extends Fragment implements AdapterView.OnItemClic
                 exerciseProxies = new HashMap<>();
             }
         });
+    }
+
+    private void localizationTest() {
+        Log.d("langfoxApp", "Before localization test");
+        String uiLanguageIso6391 = "de";
+        Locale locale = new Locale(uiLanguageIso6391);
+        ResourceBundle bundle = ResourceBundle.getBundle("messages", locale);
+        String testText = bundle.getString("welcome.head.title");
+        Log.d("langfoxApp", "Localization test: " + testText);
+        Log.d("langfoxApp", "After localization test");
     }
 
     private void getExIdToWords() {
