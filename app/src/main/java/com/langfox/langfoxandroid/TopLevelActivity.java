@@ -11,15 +11,14 @@ package com.langfox.langfoxandroid;
 
 
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 
 public class TopLevelActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -80,6 +79,9 @@ public class TopLevelActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        CacheInit.init();
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_top_level);
         // initialize the view
