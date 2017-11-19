@@ -16,8 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.langfox.cache.CategoryProxy;
-import com.langfox.cache.ExerciseProxy;
+import com.langfox.cache.ExerciseAndCategoryProxy;
 import com.langfox.cache.FoxCache;
 
 import java.util.HashMap;
@@ -31,9 +30,9 @@ public class WordbookFragment extends Fragment implements AdapterView.OnItemClic
     private ListView menuList;
     private ArrayAdapter<String> adapter;
     private String[] menuItems = {"Courses in another language", "Available Courses by Learning Path", "Available Courses by Categories"};
-    private HashMap<String, List<CategoryProxy>> categoryProxies;
-    private HashMap<String, List<ExerciseProxy>> pathProxies;
-    private HashMap<String, List<ExerciseProxy>> exerciseProxies;
+    private HashMap<String, List<ExerciseAndCategoryProxy>> categoryProxies;
+    private HashMap<String, List<ExerciseAndCategoryProxy>> pathProxies;
+    private HashMap<String, List<ExerciseAndCategoryProxy>> exerciseProxies;
     private HashMap<String, String> exIdToWords;
 
     @Override

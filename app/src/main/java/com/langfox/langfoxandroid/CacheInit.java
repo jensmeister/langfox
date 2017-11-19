@@ -4,9 +4,8 @@ import android.util.Base64;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.langfox.cache.CategoryProxy;
 import com.langfox.cache.Deserializer;
-import com.langfox.cache.ExerciseProxy;
+import com.langfox.cache.ExerciseAndCategoryProxy;
 import com.langfox.cache.FoxCache;
 import com.langfox.langfoxandroid.pojo.Category_Proxies;
 
@@ -70,13 +69,13 @@ public class CacheInit {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 byte[] serializedData = getBytes(response);
-                HashMap<String, List<CategoryProxy>> map = Deserializer.deSerializeHashMapWithCategoryProxies(serializedData);
+                HashMap<String, List<ExerciseAndCategoryProxy>> map = Deserializer.deSerializeHashMapWithCategoryProxies(serializedData);
                 FoxCache.getInstance().buildCategoryViewCache(map);
                 //printOutCategoryProxies(categoryProxies, "ende");
             }
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                FoxCache.getInstance().buildCategoryViewCache(new HashMap<String, List<CategoryProxy>>());
+                FoxCache.getInstance().buildCategoryViewCache(new HashMap<String, List<ExerciseAndCategoryProxy>>());
             }
         });
     }
@@ -91,13 +90,13 @@ public class CacheInit {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 byte[] serializedData = getBytes(response);
-                HashMap<String, List<ExerciseProxy>> map = Deserializer.deSerializeHashMapWithExerciseProxies(serializedData);
+                HashMap<String, List<ExerciseAndCategoryProxy>> map = Deserializer.deSerializeHashMapWithExerciseProxies(serializedData);
                 FoxCache.getInstance().buildPathViewCache(map);
                 Log.d("langfoxApp", "getPathProxies finished");
             }
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                FoxCache.getInstance().buildPathViewCache(new HashMap<String, List<ExerciseProxy>>());
+                FoxCache.getInstance().buildPathViewCache(new HashMap<String, List<ExerciseAndCategoryProxy>>());
             }
         });
     }
@@ -112,12 +111,12 @@ public class CacheInit {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 byte[] serializedData = getBytes(response);
-                HashMap<String, List<ExerciseProxy>> map = Deserializer.deSerializeHashMapWithExerciseProxies(serializedData);
+                HashMap<String, List<ExerciseAndCategoryProxy>> map = Deserializer.deSerializeHashMapWithExerciseProxies(serializedData);
                 FoxCache.getInstance().buildExerciseViewCache(map);
             }
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                FoxCache.getInstance().buildExerciseViewCache(new HashMap<String, List<ExerciseProxy>>());
+                FoxCache.getInstance().buildExerciseViewCache(new HashMap<String, List<ExerciseAndCategoryProxy>>());
             }
         });
     }
@@ -139,21 +138,21 @@ public class CacheInit {
         }
     }
 
-    public static void printOutExerciseProxies(HashMap<String, List<ExerciseProxy>> map, String uiLanguageIso6391, String newLanguageIso6391) {
+    public static void printOutExerciseProxies(HashMap<String, List<ExerciseAndCategoryProxy>> map, String uiLanguageIso6391, String newLanguageIso6391) {
         String key = uiLanguageIso6391 + newLanguageIso6391;
-        List<ExerciseProxy> exerciseProxies = map.get(key); //ui language iso6391 + new language iso 6391, e.g. "ende"
+        List<ExerciseAndCategoryProxy> exerciseProxies = map.get(key); //ui language iso6391 + new language iso 6391, e.g. "ende"
         if (exerciseProxies == null || exerciseProxies.isEmpty()) {
             Log.d("langfoxApp", "exerciseProxies is empty");
         } else {
             Log.d("langfoxApp", "exerciseProxies size: " + exerciseProxies.size());
             Iterator iterator = exerciseProxies.iterator();
             while (iterator.hasNext()) {
-                ExerciseProxy exerciseProxy = (ExerciseProxy) iterator.next();
+                ExerciseAndCategoryProxy exerciseProxy = (ExerciseAndCategoryProxy) iterator.next();
                 String imageRoot = "https://s3-eu-west-1.amazonaws.com/jwfirstbucket/img/catex/";
                 String compositeKey = exerciseProxy.getCompositeId(uiLanguageIso6391); //Get the key for getting the strings from the map
-                String message = exerciseProxy.getTitleTranslated()
+                String message = exerciseProxy.getTitle()
                         + ", " + exerciseProxy.getQuestionCount()
-                        + ", " + imageRoot + exerciseProxy.getImageFileName()
+                        + ", " + imageRoot + exerciseProxy.getIcon()
                         + ", " + FoxCache.getInstance().getMapExIdToWords().get(compositeKey);
                 Log.d("langfoxApp", message);
             }
@@ -161,16 +160,16 @@ public class CacheInit {
     }
 
     public static void printOutCategoryProxies(String key) {
-        List<CategoryProxy> categoryProxies = FoxCache.getInstance().getCategoryViewCache().getCategoryProxiesByKey(key);
+        List<ExerciseAndCategoryProxy> categoryProxies = FoxCache.getInstance().getCategoryViewCache().getCategoryProxiesByKey(key);
         if (categoryProxies == null || categoryProxies.isEmpty()) {
             Log.d("langfoxApp", "categoryProxies is empty");
         } else {
             Log.d("langfoxApp", "categoryProxies size: " + categoryProxies.size());
             Iterator iterator = categoryProxies.iterator();
             while (iterator.hasNext()) {
-                CategoryProxy categoryProxy = (CategoryProxy) iterator.next();
+                ExerciseAndCategoryProxy categoryProxy = (ExerciseAndCategoryProxy) iterator.next();
                 String imageRoot = "https://s3-eu-west-1.amazonaws.com/jwfirstbucket/img/catex/";
-                String message = categoryProxy.getCategoryTitle() + ", " + categoryProxy.getExerciseCount() + ", " + imageRoot + categoryProxy.geCategoryIcon();
+                String message = categoryProxy.getTitle() + ", " + categoryProxy.getExerciseCount() + ", " + imageRoot + categoryProxy.getIcon();
                 Log.d("langfoxApp", message);
             }
         }
