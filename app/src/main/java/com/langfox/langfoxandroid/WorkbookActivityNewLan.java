@@ -6,25 +6,21 @@ package com.langfox.langfoxandroid;
 //source
 //https://www.learn2crack.com/2016/02/image-loading-recyclerview-picasso.html
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.widget.TextView;
 
 import com.langfox.langfoxandroid.data.DataAdapter;
 import com.langfox.langfoxandroid.data.DataBaseHelper;
-import com.langfox.langfoxandroid.data.LangfoxContract.LanguageEntry;
+import com.langfox.langfoxandroid.data.Language;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class WorkbookActivityNewLan extends AppCompatActivity {
-    private DataBaseHelper mDbHelper;
+    private DataBaseHelper dataBaseHelper;
     public String language_image_urls[];
     public String language_names_database[];
 
@@ -33,9 +29,7 @@ public class WorkbookActivityNewLan extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workbook_new_lan);
 
-        mDbHelper = new DataBaseHelper(this);//used to make mistake on instantiation of DataBaseHelper in onCreate()
-        //insertLanguage() is executed only when the database is created first time
-        //insertLanguage();
+        dataBaseHelper = new DataBaseHelper(this);//used to make mistake on instantiation of DataBaseHelper in onCreate()
 
         language_image_urls = getFlagUrlsArray();
         for (String s : language_image_urls)
@@ -69,8 +63,8 @@ public class WorkbookActivityNewLan extends AppCompatActivity {
 
         for (int i = 0; i < language_names_database.length; i++) {
             Language language = new Language();
-            language.setName(language_names_database[i]);
-            language.setImageURL(language_image_urls[i]);
+            //language.setName(language_names_database[i]);
+            //language.setImageURL(language_image_urls[i]);
             language_array.add(language);
         }
         return language_array;
@@ -83,25 +77,25 @@ public class WorkbookActivityNewLan extends AppCompatActivity {
 
         // Create and/or open a database to read from it
 
-        SQLiteDatabase db = mDbHelper.getReadableDatabase();//instance of database, created by DataBaseHelper onCreate()
+        SQLiteDatabase db = dataBaseHelper.getReadableDatabase();//instance of database, created by DataBaseHelper onCreate()
 
         // Perform this raw SQL query "SELECT * FROM language"
         // to get a Cursor that contains all rows from the language table.
         String[] project = {
-                LanguageEntry.COLUMN_LANGUAGE_ID,
-                LanguageEntry.COLUMN_LANGUAGE_NAME,
-                LanguageEntry.COLUMN_LANGUAGE_NATIVE_NAME,
-                LanguageEntry.COLUMN_LANGUAGE_LANGUAGE_ISO1
+                Language.COLUMN_LANGUAGE_ID,
+                Language.COLUMN_LANGUAGE_NAME,
+                Language.COLUMN_LANGUAGE_NATIVE_NAME,
+                Language.COLUMN_LANGUAGE_LANGUAGE_ISO1
         };
 
         Cursor cursor = db.query(
-                LanguageEntry.TABLE_NAME,
+                Language.TABLE_NAME_LANGUAGE,
                 project,
                 null,
                 null,
                 null,
                 null,
-                LanguageEntry.COLUMN_LANGUAGE_LANGUAGE_ISO1 + " DESC");
+                Language.COLUMN_LANGUAGE_LANGUAGE_ISO1 + " DESC");
 
         String[] flagUrlsArray = new String[cursor.getCount()];
         String flagUrlBase = "https://s3-eu-west-1.amazonaws.com/jwfirstbucket/img/flags/";
@@ -126,25 +120,25 @@ public class WorkbookActivityNewLan extends AppCompatActivity {
 
         // Create and/or open a database to read from it
 
-        SQLiteDatabase db = mDbHelper.getReadableDatabase();//instance of database, created by DataBaseHelper onCreate()
+        SQLiteDatabase db = dataBaseHelper.getReadableDatabase();//instance of database, created by DataBaseHelper onCreate()
 
         // Perform this raw SQL query "SELECT * FROM language"
         // to get a Cursor that contains all rows from the language table.
         String[] project = {
-                LanguageEntry.COLUMN_LANGUAGE_ID,
-                LanguageEntry.COLUMN_LANGUAGE_NAME,
-                LanguageEntry.COLUMN_LANGUAGE_NATIVE_NAME,
-                LanguageEntry.COLUMN_LANGUAGE_LANGUAGE_ISO1
+                Language.COLUMN_LANGUAGE_ID,
+                Language.COLUMN_LANGUAGE_NAME,
+                Language.COLUMN_LANGUAGE_NATIVE_NAME,
+                Language.COLUMN_LANGUAGE_LANGUAGE_ISO1
         };
 
         Cursor cursor = db.query(
-                LanguageEntry.TABLE_NAME,
+                Language.TABLE_NAME_LANGUAGE,
                 project,
                 null,
                 null,
                 null,
                 null,
-                LanguageEntry.COLUMN_LANGUAGE_LANGUAGE_ISO1 + " DESC");
+                Language.COLUMN_LANGUAGE_LANGUAGE_ISO1 + " DESC");
 
         String[] languageNameArray = new String[cursor.getCount()];
         int index = 0;
@@ -165,17 +159,16 @@ public class WorkbookActivityNewLan extends AppCompatActivity {
     }
 
     //invoke only once
-    public void insertLanguage() {
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-
-        db.execSQL("INSERT INTO language VALUES(1,'english','English','en','eng',5,1);");
-        db.execSQL("INSERT INTO language VALUES(2,'german','Deutsch','de','ger',1,1);");
-        db.execSQL("INSERT INTO language VALUES(3,'spanish','Español','es','spa',6,1);");
-        db.execSQL("INSERT INTO language VALUES(4,'finnish','Suomi','fi','fin',4,1);");
-        db.execSQL("INSERT INTO language VALUES(5,'swedish','Svenska','sv','swe',7,1);");
-        db.execSQL("INSERT INTO language VALUES(6,'japanese','&#26085;&#26412;&#35486;','ja','jpn',3,1);");
-        db.execSQL("INSERT INTO language VALUES(7,'chinese','Chinese','zh','chi',2,2);");
-    }
+//    public void insertLanguage() {
+//        SQLiteDatabase db = dataBaseHelper.getWritableDatabase();
+//        db.execSQL("INSERT INTO language VALUES(1,'english','English','en','eng',5,1);");
+//        db.execSQL("INSERT INTO language VALUES(2,'german','Deutsch','de','ger',1,1);");
+//        db.execSQL("INSERT INTO language VALUES(3,'spanish','Español','es','spa',6,1);");
+//        db.execSQL("INSERT INTO language VALUES(4,'finnish','Suomi','fi','fin',4,1);");
+//        db.execSQL("INSERT INTO language VALUES(5,'swedish','Svenska','sv','swe',7,1);");
+//        db.execSQL("INSERT INTO language VALUES(6,'japanese','&#26085;&#26412;&#35486;','ja','jpn',3,1);");
+//        db.execSQL("INSERT INTO language VALUES(7,'chinese','Chinese','zh','chi',2,2);");
+//    }
 
 }
 

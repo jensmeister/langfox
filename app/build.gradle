@@ -37,6 +37,8 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.google.code.gson:gson:2.8.2'
     compile "com.jakewharton:butterknife:8.8.1"
+    compile 'com.j256.ormlite:ormlite-android:4.48'
+    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
 //    compile "org.apache.shiro:shiro-core:1.4.0"
 //    compile "org.apache.shiro:shiro-core:1.4.0"{
 //        exclude module: 'shiro-event-1.4.0'

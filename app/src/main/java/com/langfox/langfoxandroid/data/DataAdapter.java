@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.load.model.StreamEncoder;
-import com.langfox.langfoxandroid.Language;
 import com.langfox.langfoxandroid.R;
 import com.langfox.langfoxandroid.SvgDecoder;
 import com.langfox.langfoxandroid.SvgDrawableTranscoder;

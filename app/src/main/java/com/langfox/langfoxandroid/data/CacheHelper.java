@@ -1,4 +1,4 @@
-package com.langfox.langfoxandroid;
+package com.langfox.langfoxandroid.data;
 
 import android.util.Base64;
 import android.util.Log;
@@ -26,34 +26,35 @@ import retrofit2.Retrofit;
  * Created by Jens on 14.11.2017.
  */
 
-public class CacheInit {
+public class CacheHelper {
 
-    public CacheInit() {
+    public CacheHelper() {
     }
 
     public static void init() {
-        CacheInit.getExIdToWords();
-        CacheInit.getCategoryProxies();
-        CacheInit.getPathProxies();
-        CacheInit.getExerciseProxies();
+        CacheHelper.getExIdToWords();
+        CacheHelper.getCategoryProxies();
+        CacheHelper.getPathProxies();
+        CacheHelper.getExerciseProxies();
     }
 
     public static void getExIdToWords() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://www.langfox.com/")
                 .build();
-        LangfoxAPI repo = retrofit.create(LangfoxAPI.class);
+        LangfoxCacheAPI repo = retrofit.create(LangfoxCacheAPI.class);
         Call<ResponseBody> call = repo.CategoryProxiesBySimpleGetCall("7");
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                byte[] serializedData = CacheInit.getBytes(response);
+                byte[] serializedData = CacheHelper.getBytes(response);
                 HashMap<String, String> map = Deserializer.deSerializeHashMapWithString(serializedData);
                 FoxCache.getInstance().setMapExIdToWords(map);
-                Log.d("langfoxApp", "getExIdToWords finished");
+                //Log.d("langfoxApp", "getExIdToWords finished");
             }
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d("langfoxApp", "getExIdToWords onFailure");
                 FoxCache.getInstance().setMapExIdToWords(new HashMap<String, String>());
             }
         });
@@ -63,7 +64,7 @@ public class CacheInit {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://www.langfox.com/")
                 .build();
-        LangfoxAPI repo = retrofit.create(LangfoxAPI.class);
+        LangfoxCacheAPI repo = retrofit.create(LangfoxCacheAPI.class);
         Call<ResponseBody> call = repo.CategoryProxiesBySimpleGetCall("6");
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -84,7 +85,7 @@ public class CacheInit {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://www.langfox.com/")
                 .build();
-        LangfoxAPI repo = retrofit.create(LangfoxAPI.class);
+        LangfoxCacheAPI repo = retrofit.create(LangfoxCacheAPI.class);
         Call<ResponseBody> call = repo.CategoryProxiesBySimpleGetCall("5");
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -92,10 +93,11 @@ public class CacheInit {
                 byte[] serializedData = getBytes(response);
                 HashMap<String, List<ExerciseAndCategoryProxy>> map = Deserializer.deSerializeHashMapWithExerciseProxies(serializedData);
                 FoxCache.getInstance().buildPathViewCache(map);
-                Log.d("langfoxApp", "getPathProxies finished");
+                //Log.d("langfoxApp", "getPathProxies finished");
             }
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d("langfoxApp", "getPathProxies onFailure");
                 FoxCache.getInstance().buildPathViewCache(new HashMap<String, List<ExerciseAndCategoryProxy>>());
             }
         });
@@ -105,7 +107,7 @@ public class CacheInit {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://www.langfox.com/")
                 .build();
-        LangfoxAPI repo = retrofit.create(LangfoxAPI.class);
+        LangfoxCacheAPI repo = retrofit.create(LangfoxCacheAPI.class);
         Call<ResponseBody> call = repo.CategoryProxiesBySimpleGetCall("4");
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -125,12 +127,12 @@ public class CacheInit {
         try {
             Gson gson = new Gson();
             Category_Proxies contributorsList = gson.fromJson(response.body().string(), Category_Proxies.class);
-            Log.d("modified:", contributorsList.getModified());
-            Log.d("name:", contributorsList.getName());
+            //Log.d("modified:", contributorsList.getModified());
+            //Log.d("name:", contributorsList.getName());
             String base64EncodedData = contributorsList.getObject_base_64_encoded();
             byte[] serializedData = Base64.decode(base64EncodedData, Base64.DEFAULT);
             String sha512Hash = new Sha512Hash(serializedData).toString();
-            Log.d("langfoxApp", "Data byteCount: " + serializedData.length + ", sha512Hash: " + sha512Hash);
+            //Log.d("langfoxApp", "Data byteCount: " + serializedData.length + ", sha512Hash: " + sha512Hash);
             return serializedData;
         } catch (IOException e) {
             e.printStackTrace();
@@ -144,7 +146,7 @@ public class CacheInit {
         if (exerciseProxies == null || exerciseProxies.isEmpty()) {
             Log.d("langfoxApp", "exerciseProxies is empty");
         } else {
-            Log.d("langfoxApp", "exerciseProxies size: " + exerciseProxies.size());
+            //Log.d("langfoxApp", "exerciseProxies size: " + exerciseProxies.size());
             Iterator iterator = exerciseProxies.iterator();
             while (iterator.hasNext()) {
                 ExerciseAndCategoryProxy exerciseProxy = (ExerciseAndCategoryProxy) iterator.next();

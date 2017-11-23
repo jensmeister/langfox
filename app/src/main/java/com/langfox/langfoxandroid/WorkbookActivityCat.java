@@ -3,15 +3,8 @@ package com.langfox.langfoxandroid;
 //use git in Android Studio
 //https://www.coursera.org/learn/internet-of-things-dragonboard/lecture/EfKqi/using-git-with-android-studio
 
-//source
-//https://www.learn2crack.com/2016/02/image-loading-recyclerview-picasso.html
-
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import butterknife.OnClick;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import java.util.ArrayList;
+import android.support.v7.app.AppCompatActivity;
 
 public class WorkbookActivityCat extends AppCompatActivity {
 

@@ -10,15 +10,28 @@ package com.langfox.langfoxandroid;
 //http://blog.csdn.net/guolin_blog/article/details/13171191
 
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.j256.ormlite.dao.Dao;
+import com.langfox.langfoxandroid.data.CacheHelper;
+import com.langfox.langfoxandroid.data.LanguageHelper;
+import com.langfox.langfoxandroid.data.DataBaseHelper;
+import com.langfox.langfoxandroid.data.Language;
+import com.langfox.langfoxandroid.data.User;
+
+import java.sql.SQLException;
+import java.util.List;
 
 public class TopLevelActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -80,7 +93,32 @@ public class TopLevelActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        CacheInit.init();
+        CacheHelper.init();
+
+        LanguageHelper.getLanguages(this);
+        DataBaseHelper helper  = new DataBaseHelper(this);
+        Dao<User, Integer> userDao = null;
+        try {
+            //TableUtils.clearTable(helper.getConnectionSource(), User.class);
+            userDao = helper.getUserDao();
+            User user = new User().setUserId(1).setEmail("jens.wilke@gmail.com");
+            userDao.createOrUpdate(user);
+        } catch (SQLException e) {
+            Log.d("langfoxApp", "userDao EXCEPTION 1");
+            e.printStackTrace();
+        }
+
+        try {
+            userDao = helper.getUserDao();
+            final List<User> users = userDao.queryForAll();
+            for (User user : users) {
+                Log.d("langfoxApp", "user: " + user.getUserId() + " / " + user.getEmail());
+            }
+        } catch (SQLException e) {
+            Log.d("langfoxApp", "userDao EXCEPTION 2");
+            e.printStackTrace();
+        }
+
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_top_level);
@@ -240,6 +278,54 @@ public class TopLevelActivity extends AppCompatActivity implements View.OnClickL
         if (meFragment != null) {
             transaction.hide(meFragment);
         }
+    }
+
+    private String[] printLanguageNames() {
+
+        Log.d("langfoxApp", "getLanguageNames");
+
+        // Create and/or open a database to read from it
+        DataBaseHelper dataBaseHelper = new DataBaseHelper(this);//used to make mistake on instantiation of DataBaseHelper in onCreate()
+        SQLiteDatabase readableDatabase = dataBaseHelper.getReadableDatabase();//instance of database, created by DataBaseHelper onCreate()
+        //SQLiteDatabase readableDatabase = dataBaseHelper.getWritableDatabase();//instance of database, created by DataBaseHelper onCreate()
+//        dataBaseHelper.insertLanguage(readableDatabase);
+
+        // Perform this raw SQL query "SELECT * FROM language"
+        // to get a Cursor that contains all rows from the language table.
+        Log.d("langfoxApp", "getLanguageNames 1");
+        String[] project = {
+                Language.COLUMN_LANGUAGE_ID,
+                Language.COLUMN_LANGUAGE_NAME,
+                Language.COLUMN_LANGUAGE_NATIVE_NAME,
+                Language.COLUMN_LANGUAGE_LANGUAGE_ISO1
+        };
+
+        Cursor cursor = readableDatabase.query(
+                Language.TABLE_NAME_LANGUAGE,
+                project,
+                null,
+                null,
+                null,
+                null,
+                Language.COLUMN_LANGUAGE_LANGUAGE_ISO1 + " DESC");
+
+        String[] languageNameArray = new String[cursor.getCount()];
+        int index = 0;
+        cursor.moveToFirst();
+
+        while (!cursor.isAfterLast()) {
+            String languageName = cursor.getString(1);
+            languageNameArray[index] = languageName;
+            cursor.moveToNext();
+            index++;
+        }
+
+        for (String s : languageNameArray) {
+            System.out.println(s);
+        }
+
+        cursor.close();
+        return languageNameArray;
     }
 }
 

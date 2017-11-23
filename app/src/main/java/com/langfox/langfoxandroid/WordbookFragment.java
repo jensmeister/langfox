@@ -18,6 +18,9 @@ import android.widget.ListView;
 
 import com.langfox.cache.ExerciseAndCategoryProxy;
 import com.langfox.cache.FoxCache;
+import com.langfox.langfoxandroid.data.CacheHelper;
+import com.langfox.langfoxandroid.data.LanguageHelper;
+import com.langfox.langfoxandroid.data.Language;
 
 import java.util.HashMap;
 import java.util.List;
@@ -53,6 +56,10 @@ public class WordbookFragment extends Fragment implements AdapterView.OnItemClic
         menuList = (ListView) view.findViewById(R.id.menu_list);
         menuList.setAdapter(adapter);
         localizationTest();
+        Log.d("langfoxApp", "Language printout follows");
+        for (Language language : LanguageHelper.getLanguages()) {
+            Log.d("langfoxApp", "Language TEST: " + language.getName());
+        }
         menuList.setOnItemClickListener(this);
         return view;
     }
@@ -82,7 +89,7 @@ public class WordbookFragment extends Fragment implements AdapterView.OnItemClic
 
     private void testFoxCache() {
         //CacheInit.printOutExerciseProxies(FoxCache.getInstance().getPathViewCacheMap(), "en", "de");
-        CacheInit.printOutExerciseProxies(FoxCache.getInstance().getExerciseViewCacheMap(), "en", "dec24");
+        CacheHelper.printOutExerciseProxies(FoxCache.getInstance().getExerciseViewCacheMap(), "en", "dec24");
         //CacheInit.printOutCategoryProxies("ende");
     }
 
