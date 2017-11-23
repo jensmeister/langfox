@@ -158,18 +158,6 @@ public class WorkbookActivityNewLan extends AppCompatActivity {
         return languageNameArray;
     }
 
-    //invoke only once
-//    public void insertLanguage() {
-//        SQLiteDatabase db = dataBaseHelper.getWritableDatabase();
-//        db.execSQL("INSERT INTO language VALUES(1,'english','English','en','eng',5,1);");
-//        db.execSQL("INSERT INTO language VALUES(2,'german','Deutsch','de','ger',1,1);");
-//        db.execSQL("INSERT INTO language VALUES(3,'spanish','Español','es','spa',6,1);");
-//        db.execSQL("INSERT INTO language VALUES(4,'finnish','Suomi','fi','fin',4,1);");
-//        db.execSQL("INSERT INTO language VALUES(5,'swedish','Svenska','sv','swe',7,1);");
-//        db.execSQL("INSERT INTO language VALUES(6,'japanese','&#26085;&#26412;&#35486;','ja','jpn',3,1);");
-//        db.execSQL("INSERT INTO language VALUES(7,'chinese','Chinese','zh','chi',2,2);");
-//    }
-
 }
 
 
