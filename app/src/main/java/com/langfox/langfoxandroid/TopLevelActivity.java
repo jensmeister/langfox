@@ -24,14 +24,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.table.TableUtils;
 import com.langfox.langfoxandroid.data.CacheHelper;
-import com.langfox.langfoxandroid.data.LanguageHelper;
 import com.langfox.langfoxandroid.data.DataBaseHelper;
 import com.langfox.langfoxandroid.data.Language;
+import com.langfox.langfoxandroid.data.LanguageHelper;
 import com.langfox.langfoxandroid.data.User;
 
 import java.sql.SQLException;
-import java.util.List;
 
 public class TopLevelActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -95,30 +95,28 @@ public class TopLevelActivity extends AppCompatActivity implements View.OnClickL
 
         CacheHelper.init();
 
-        LanguageHelper.getLanguages(this);
         DataBaseHelper helper  = new DataBaseHelper(this);
+        Language uiLanguage = helper.getLanguageFromDb(5);
         Dao<User, Integer> userDao = null;
         try {
             //TableUtils.clearTable(helper.getConnectionSource(), User.class);
+            TableUtils.dropTable(helper.getConnectionSource(), User.class, true);
+            TableUtils.createTableIfNotExists(helper.getConnectionSource(), User.class);
             userDao = helper.getUserDao();
-            User user = new User().setUserId(1).setEmail("jens.wilke@gmail.com");
+            Log.d("langfoxApp", "Going to set uiLanguage: " + uiLanguage.getName());
+            User user = new User()
+                    .setUserId(1)
+                    .setEmail("jens.wilke@gmail.com")
+                    .setUiLanguage(uiLanguage);
             userDao.createOrUpdate(user);
         } catch (SQLException e) {
             Log.d("langfoxApp", "userDao EXCEPTION 1");
             e.printStackTrace();
         }
 
-        try {
-            userDao = helper.getUserDao();
-            final List<User> users = userDao.queryForAll();
-            for (User user : users) {
-                Log.d("langfoxApp", "user: " + user.getUserId() + " / " + user.getEmail());
-            }
-        } catch (SQLException e) {
-            Log.d("langfoxApp", "userDao EXCEPTION 2");
-            e.printStackTrace();
-        }
+        LanguageHelper.updateLanguagesFromRest(this);
 
+        helper.printAllUsers();
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_top_level);

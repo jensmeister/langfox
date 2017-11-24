@@ -2,6 +2,7 @@ package com.langfox.langfoxandroid.data;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
@@ -69,11 +70,37 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper {
         return languageDao;
     }
 
-    public void getLanguagesFromDb() { ////////////////////////////////////////////////////////////////////TODO(Jens) This must be called as fallback
+    public void getLanguagesFromDb() {
         try {
             List<Language> languages = this.getLanguageDao().queryForAll();
             LanguageHelper.setLanguages(languages);
         } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Language getLanguageFromDb(Integer languageId) {
+        try {
+            Language language = this.getLanguageDao().queryForId(languageId);
+            return language;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void printAllUsers() {
+        try {
+            userDao = this.getUserDao();
+            final List<User> users = userDao.queryForAll();
+            for (User user : users) {
+                Log.d("langfoxApp", "user: " + user.getUserId()
+                        + " / " + user.getEmail()
+                        + " / " + user.getUiLanguage().getName()
+                        + " / " + user.getUiLanguage().getLanguageId());
+            }
+        } catch (SQLException e) {
+            Log.d("langfoxApp", "userDao EXCEPTION 2");
             e.printStackTrace();
         }
     }

@@ -14,12 +14,17 @@ public class User {
 
     public static final String COLUMN_USER_ID = "user_id";
     public static final String COLUMN_EMAIL = "email";
+    public static final String COLUMN_UI_LANGUAGE = "ui_language";
+
 
     @DatabaseField(id = true, columnName = COLUMN_USER_ID) //, generatedId = true
     private Integer userId;
 
     @DatabaseField(columnName = COLUMN_EMAIL)
     private String email;
+
+    @DatabaseField(foreign = true, columnName = COLUMN_UI_LANGUAGE)
+    private Language uiLanguage;
 
     public User() {
     }
@@ -42,4 +47,12 @@ public class User {
         return this;
     }
 
+    public Language getUiLanguage() {
+        return uiLanguage;
+    }
+
+    public User setUiLanguage(Language uiLanguage) {
+        this.uiLanguage = uiLanguage;
+        return this;
+    }
 }

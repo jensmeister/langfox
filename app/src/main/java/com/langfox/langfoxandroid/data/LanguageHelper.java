@@ -33,7 +33,7 @@ public class LanguageHelper {
         LanguageHelper.languages = languages;
     }
 
-    public static void getLanguages(final Context context) {
+    public static void updateLanguagesFromRest(final Context context) {
         Log.d("langfoxApp", "Languages getLanguages");
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://www.langfox.com/")

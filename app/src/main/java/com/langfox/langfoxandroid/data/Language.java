@@ -49,6 +49,10 @@ public class Language {
         // Don't forget the empty constructor, needed by ORMLite.
     }
 
+    public Short getLanguageId() {
+        return this.languageId;
+    }
+
     public String getName() {
         return name;
     }
